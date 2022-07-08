@@ -28,8 +28,6 @@ async function handleConversion(from:Exchange, to:Exchange){
   }
 }
 
-
-
 function handleClick(){
   conversionState.value.status = 'converting'
   conversionState.value.error = false
@@ -37,7 +35,6 @@ function handleClick(){
   const to = [...db.value].find(item => item.id === selectedOptions.value.to)
   if((from && typeof from == 'object') && (to && typeof from == 'object')){
     handleConversion(from, to)
-    .then(data => console.log(data))
     .catch(e => console.log(e))
   } else {
     return 

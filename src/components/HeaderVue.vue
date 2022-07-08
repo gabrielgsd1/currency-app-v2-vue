@@ -38,8 +38,8 @@
     box-shadow: 0 0 2rem black;
     z-index: 1;
     backdrop-filter: blur(6px);
-    position: sticky;
-    top: 0;
+    /* position: sticky; */
+    /* top: 0; */
   }
   .container{
     display: flex;

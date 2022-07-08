@@ -18,7 +18,6 @@ export async function getAllMadeConversions(id: string)
   const {data} = await axios.post('http://localhost:3001/getconversions', {
     id
   })
-  console.log(data)
   return data
 }
 
@@ -27,4 +26,10 @@ export async function getAllCurrencies()
   const {data} = await axios.get('http://localhost:3001/getcurrencies')
   db.value = data
   return data
+}
+
+export function getCurrency(code:string):Exchange|null{
+  const result = db.value.find(currency => currency.code === code)
+  if(result != null) return result
+  else return null
 }

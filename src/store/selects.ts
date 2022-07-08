@@ -26,7 +26,3 @@ export function setFromCoin(id:string){
 export function setToCoin(id:string){
   selectedOptions.value.to = id
 }
-
-watch(selectedOptions, (val) => {
-  console.log(val)
-},{deep: true})
