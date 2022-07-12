@@ -1,26 +1,25 @@
 <script setup lang="ts">
 import HeaderVue from './components/HeaderVue.vue'
-import FormContainerVue from './components/Forms/FormContainerVue.vue'
-import {getAllCurrencies, getAllMadeConversions} from './store/allExchanges'
-import ConversionComponent from './components/ConversionComponent.vue'
-import { RouterLink, RouterView } from 'vue-router';
+import { getAllCurrencies, getAllMadeConversions} from './store/allExchanges'
+import { RouterView } from 'vue-router';
 import { onMounted } from 'vue';
 import {setAllConversions} from '@/store/selectedExchanges'
+
 
 onMounted(async () => {
   await getAllCurrencies()
   const allConversions = await getAllMadeConversions("62bf74a6c8fdd0331d8e4ca7")
   setAllConversions(allConversions)
 })
+
+
+
 </script>
 
 <template>
   <HeaderVue/>
   <RouterView/>
-<!-- 
-  <ConversionComponent/>
-    
-  <FormContainerVue/> -->
+
     
 </template>
 

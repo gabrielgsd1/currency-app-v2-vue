@@ -1,41 +1,64 @@
 <script setup lang="ts">
-  import { getAllConversions, deleteConversionFromList} from '../store/selectedExchanges';
+  import { getAllConversions} from '../store/selectedExchanges';
   import type {Conversion} from '@/store/selectedExchanges' 
+  import {db, deleteConversion, handleDate} from '@/store/allExchanges'
   import ButtonVue from './ButtonVue.vue';
   import ConversionPopUp from "@/components/PopUps/ConversionPopUp.vue"
-  import { ref, type Ref } from 'vue';
+  import { ref, type Ref, computed } from 'vue';
+  import ShowUpTransition from './Transitions/ShowUpTransition.vue';
+  import DeletionPopUp from './PopUps/DeletionPopUp.vue';
+  import {refreshConversions} from '@/store/selectedExchanges'
 
-  const displayPopUp:Ref = ref({
+  const displayInfoPopUp:Ref = ref({
     display: false,
     data: null
   })
 
-  function handleDate(date:string){
-    const [yearMonthDay, hourMinuteSecond] = date.split("T")
-    const [year,month, day] = yearMonthDay.split("-") 
-    const [hour, minute, second] = hourMinuteSecond.split(":")
+  const displayDeletePopUp:Ref = ref({
+    display: false,
+    data: null
+  })
 
-    return `${year}/${month}/${day} - ${hour}:${minute}:${second.slice(0,2)}`
+  const conversionsCount = computed(() => {
+    return getAllConversions().length
+  })
+
+  function handleDeleteButtonClick(conversion:Conversion){
+    showDeletePopUp(true)
+    displayDeletePopUp.value.data = conversion
   }
 
-  function handleDelete(){
+  function leaveDeletePopUp(){
+    showDeletePopUp(false)
+    displayDeletePopUp.value.data = null
+  }
+
+  async function deleteItem(conversion: Conversion){
+    const remainingConversions:Conversion[] = await deleteConversion(conversion.id as string)
+    showDeletePopUp(false)
+    refreshConversions(remainingConversions)
   }
 
   function handleConversionClick(conversion:Conversion){
-    displayPopUp.value.display = true
-    displayPopUp.value.data = conversion
+    displayInfoPopUp.value.display = true
+    displayInfoPopUp.value.data = conversion
   }
 
   function leavePopUp(){
-    displayPopUp.value.display = false
-    displayPopUp.value.data = null
+    displayInfoPopUp.value.display = false
+    displayInfoPopUp.value.data = null
+  }
+
+  function showDeletePopUp(value: boolean){
+    displayDeletePopUp.value.display = value
   }
 
 </script>
 
 <template>
   <div id="resultContainer">
-    <h2>Made Conversions</h2>
+    <h2>Made Conversions <span v-if="conversionsCount > 0"> - {{conversionsCount}}</span></h2>
+    <h3 v-if="conversionsCount < 1">Nothing here yet.</h3>
     <TransitionGroup 
       tag="div" 
       class="conversionsContainer" 
@@ -49,7 +72,7 @@
         class="conversionItem" 
         @click="() => handleConversionClick(item)"
       >
-        <button class="deleteItem" @click="handleDelete">&times;</button>
+        <button class="deleteItem" @click.stop="() => handleDeleteButtonClick(item)">&times;</button>
         <div>{{handleDate(item.date.toString())}}</div>
         <div class='conversionInfo' >
           {{item.from_code}} - {{item.to_code}} 
@@ -59,13 +82,20 @@
         </div>
       </div>
     </TransitionGroup>
-    <Transition name="show" type="animation">
-      <PopUp 
-        v-if="displayPopUp.display" 
-        :conversion="displayPopUp.data"
+    <ShowUpTransition>
+      <ConversionPopUp
+        v-if="displayInfoPopUp.display"
+        :conversion="displayInfoPopUp.data"
         @leavePopUp="leavePopUp"
       />
-    </Transition>
+    </ShowUpTransition>
+    <ShowUpTransition>
+      <DeletionPopUp 
+        @leaveDeletePopUp="leaveDeletePopUp"
+        @confirmDeletion="() => deleteItem(displayDeletePopUp.data)"
+        :conversion="displayDeletePopUp.data" 
+        v-if="displayDeletePopUp.display"/>
+    </ShowUpTransition>
   </div>
 </template>
 
@@ -85,12 +115,12 @@
     z-index: 2;
     font-size: 1.75rem;
     top: 5%;
-    color: rgb(25,25,25);
+    color: rgb(85,85,85);
     left: 87%;
     transition: 200ms;
   }
   .deleteItem:hover{
-    text-shadow: 0 0 0.25em rgb(20,20,20);
+    text-shadow: 0 0 0.25em rgb(85,85,85);
   }
   .conversionsContainer{
     display: grid;
@@ -109,7 +139,7 @@
     color: #ddd;
     padding: 1em 0;
     min-height: auto;
-    background: rgb(64, 64, 64);
+    background: linear-gradient(90deg, rgba(60,60,60,1), rgba(35,35,35,1)); 
     border-radius: 0.35rem;
     width: 100%;
   }
@@ -118,39 +148,5 @@
     font-weight: bolder;
   }
 
-  .move-enter-active{
-    position: relative;
-    animation: show 250ms ease-in-out;
-  }
-  .move-leave-active{
-    position: relative;
-    animation: show 250ms ease-in-out reverse;
-  }
-
-  .show-enter-active{
-    position: relative;
-    animation: show 250ms ease-in-out;
-  }
-  .show-leave-active{
-    position: relative;
-    animation: show 250ms ease-in-out reverse;
-  }
-
-  @keyframes show{
-    0%{
-      opacity: 0;
-    }
-    100%{
-      opacity: 1;
-    }
-  }
-
-  @keyframes up{
-    0%{
-      transform: translateY(-15%);
-    }
-    100%{
-      transform: translateY((0));
-    }
-  }
+  
 </style>

@@ -22,3 +22,4 @@ export function setUserData(info:UserInfo){
 export function getUserData():UserInfo{
   return userInfo.value
 }
+

@@ -3,7 +3,7 @@ import type {Ref} from 'vue'
 import type {Exchange} from './allExchanges'
 
 export type Conversion = {
-  date: Date,
+  date: string,
   from_code: string,
   to_code: string,
   rate: number,
@@ -31,12 +31,10 @@ export function setAllConversions(conversions:Array<Conversion>){
   madeConversions.value = conversions
 }
 
-
 export function addConversionToList(conversionData:Conversion){
   madeConversions.value.unshift(conversionData)
 }
 
-export function deleteConversionFromList(exchange:Conversion){
-  const indexOfConversionToDelete = madeConversions.value.findIndex(item => item === exchange)
-  madeConversions.value.splice(indexOfConversionToDelete, 1)
+export function refreshConversions(conversions:Conversion[]){
+  madeConversions.value = conversions
 }

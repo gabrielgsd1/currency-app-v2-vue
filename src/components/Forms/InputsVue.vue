@@ -4,7 +4,7 @@
   </div>
 </template>
 
-<style>
+<style scoped>
   #inputs{
     display: flex;
     flex-direction: column;

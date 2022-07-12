@@ -1,9 +1,11 @@
 <script setup lang="ts">
   import type { Conversion } from '@/store/selectedExchanges';
-  import {getCurrency, type Exchange} from '@/store/allExchanges'
+  import {getCurrency, handleDate, type Exchange} from '@/store/allExchanges'
+  import PopUpContent from './PopUpContent.vue'
+  import Overlay from './Overlay.vue'
 
   const {conversion} = defineProps<{
-    conversion: Conversion
+    conversion: Conversion,
   }>()
   
   defineEmits<{
@@ -16,8 +18,8 @@
 
 <template>
   <section>
-    <div class="overlay" @click="$emit('leavePopUp')"/>    
-    <div class="container">
+    <Overlay @click="$emit('leavePopUp')"/>
+    <PopUpContent>
       <h1>{{conversion.from_code}} - {{conversion.to_code}}</h1>
       <div class="line"/>
       <div class="content">
@@ -62,25 +64,17 @@
           </div>
           <div class="info">
             <h3>DATE</h3>
-            <p>{{conversion.date}} (UTC)</p>
+            <p>{{handleDate(conversion.date)}}</p>
           </div>
           <div class="line"/>
         </div>
       </div>
-    </div>
+    </PopUpContent>
   </section>
 </template>
 
 <style scoped>
-  .container{
-    background: rgba(40,40,40,0.75);  
-    position: fixed;
-    top: 50%;
-    z-index: 10;
-    left: 50%;
-    transform: translate(-50%,-50%);
-    min-width: 500px;
-  }
+
   h3, p{
     margin: 0;
   }
