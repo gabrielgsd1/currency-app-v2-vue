@@ -24,8 +24,8 @@
   })
 
   const url = computed(() => {
-    if(formType.value === 'register') return 'http://localhost:3001/registerUser'
-    else return 'http://localhost:3001/login'
+    if(formType.value === 'register') return 'https://currency-vue-prisma.herokuapp.com/registerUser'
+    else return 'https://currency-vue-prisma.herokuapp.com/login'
   })
 
   async function handleSubmit(){

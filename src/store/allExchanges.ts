@@ -1,7 +1,6 @@
 import {ref} from 'vue'
 import type {Ref} from 'vue'
 import * as axiosInstance from 'axios'
-import type { Conversion } from './selectedExchanges'
 import {default as dayjs} from 'dayjs'
 import 'dayjs/locale/pt-br'
 
@@ -23,7 +22,7 @@ export let db:Ref<Array<Exchange>> = ref([])
 
 export async function getAllCurrencies()
 :Promise<Exchange[]>{
-  const {data} = await axios.get('http://localhost:3001/getcurrencies')
+  const {data} = await axios.get('https://currency-vue-prisma.herokuapp.com/getcurrencies')
   db.value = data
   return data
 }
@@ -35,7 +34,7 @@ export function getCurrency(code:string):Exchange|null{
 }
 
 export async function deleteConversion(id:string){
-  const {data} = await axios.delete("http://localhost:3001/deleteconversion", {
+  const {data} = await axios.delete("https://currency-vue-prisma.herokuapp.com/deleteconversion", {
     data: {
       id
     }

@@ -9,7 +9,7 @@ import axios, { type AxiosResponse } from "axios";
 async function handleConversion(from:Exchange, to:Exchange){
   try{
     conversionState.value.status = 'converting'
-    const request:AxiosResponse = await axios.post("http://localhost:3001/convert", {
+    const request:AxiosResponse = await axios.post("https://currency-vue-prisma.herokuapp.com/convert", {
       from: from.code,
       to: to.code,
       id: getLoginInfo().userData?.id
