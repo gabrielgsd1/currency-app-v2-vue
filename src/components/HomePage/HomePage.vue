@@ -71,19 +71,19 @@
 
   svg{
     height: 140px;
-    animation: spin 1s infinite;
+    backface-visibility: visible;
+    animation: spin 1.5s linear infinite;
     margin: 1.5rem;
   }
   @keyframes spin{
     0%{
-      transform: scaleX(0%)
-
+      transform: rotateY(0deg) translateX(-6%);
     }
     50%{
-      transform: scaleX(100%)
+      transform: rotateY(-180deg) translateX(-12%); 
     }
     100%{
-      transform: scaleX(0%)
+      transform: rotateY(-360deg) translateX(-6%);
     }
   }
   .buttons {
