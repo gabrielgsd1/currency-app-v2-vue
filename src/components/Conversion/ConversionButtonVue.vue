@@ -5,8 +5,20 @@ import { clearFromExchange, clearToExchange, selectedOptions } from "@/store/sel
 import {db, type Exchange} from "@/store/allExchanges"
 import {getLoginInfo, setConversions} from '@/store/loginInfo'
 import axios, { type AxiosResponse } from "axios";
+import { useErrorMessage } from "@/composables/useErrorMessage";
+import ErrorMessage from "../Error/ErrorMessage.vue";
+import { ref } from "vue";
+import LoadingPopUp from "../PopUps/LoadingPopUp.vue";
+
+const error = useErrorMessage()
+
+const status = ref('')
 
 async function handleConversion(from:Exchange, to:Exchange){
+  status.value = 'loading'
+  if(selectedOptions.value.from === '' || selectedOptions.value.to === ''){
+    error.setError('Please select two currencies')
+  }
   try{
     conversionState.value.status = 'converting'
     const request:AxiosResponse = await axios.post("https://currency-vue-prisma.herokuapp.com/convert", {
@@ -26,35 +38,37 @@ async function handleConversion(from:Exchange, to:Exchange){
     conversionState.value.status = 'error'
     conversionState.value.error = true
   }
+  finally{
+    status.value = ''
+  }
 }
 
 function handleClick(){
-  conversionState.value.status = 'converting'
-  conversionState.value.error = false
+  error.reset()
+  console.log(error.exists())
   const from = [...db.value].find(item => item.id === selectedOptions.value.from)
   const to = [...db.value].find(item => item.id === selectedOptions.value.to)
-  if((from && typeof from == 'object') && (to && typeof from == 'object')){
+  if(from !== undefined && to !== undefined){
     handleConversion(from, to)
     .catch(e => console.log(e))
   } else {
-    return 
+    return error.setError('Please select two exchanges')
   }
 }
 
 </script>
 
 <template>
+  <ErrorMessage v-if="error.exists()">{{error.getMessage()}}</ErrorMessage>
   <div id="buttonContainer">
     <ButtonVue btn-type="primary" @click="handleClick">Convert</ButtonVue>
   </div>
+  <LoadingPopUp v-if="status === 'loading'">
+    Converting...
+  </LoadingPopUp>
 </template>
 
 <style scoped>
-  #buttonContainer{
-    display: flex;
-    justify-content: center;
-    width: 50%;
-  }
 
   #buttonContainer > button{
     all: unset;

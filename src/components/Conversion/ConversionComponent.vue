@@ -3,7 +3,17 @@ import ConversionButtonVue from '@/components/Conversion/ConversionButtonVue.vue
 import ResultTable from '@/components/Conversion/ResultTable.vue'
 import CoinInput from '@/components/Conversion/CoinInput.vue'
 import { getAllCurrencies } from '@/store/allExchanges';
-import { onMounted } from 'vue';
+import { getLoginInfo } from '@/store/loginInfo'
+import { useRouter } from 'vue-router';
+import { onMounted, onBeforeMount } from 'vue';
+
+onBeforeMount(() => {
+  const router = useRouter()
+
+  if(!getLoginInfo().isLogged){
+    router.push('/login')
+  } 
+  })
 
 onMounted(async () => {
   await getAllCurrencies()

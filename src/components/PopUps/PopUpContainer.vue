@@ -10,5 +10,9 @@ import Overlay from "./Overlay.vue";
 </template>
 
 <style scoped>
-
+  .popUpContainer{
+    color: #fff;
+    margin: auto;
+    text-align: center;
+  }
 </style>

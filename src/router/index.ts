@@ -10,13 +10,11 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: () => import('@/components/Forms/FormContainerVue.vue'),
-    props: () => ({ type: 'login' })
   },
   {
     path: '/register',
     name: 'Register',
     component: () => import('@/components/Forms/FormContainerVue.vue'),
-    props: () => ({ type: 'register' })
   },
   {
     path: '/conversion',

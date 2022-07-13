@@ -19,8 +19,9 @@
   <header>
     <div class="container">
       <div class="projectButtons">
-        <ButtonVue btn-type="tertiary">About</ButtonVue>
+        ><RouterLink to="/"><ButtonVue btn-type="primary">Home</ButtonVue></RouterLink>
         <ButtonVue btn-type="primary"><a id="github" href="https://github.com/gabrielgsd1" target="_blank">GitHub</a></ButtonVue>
+        <ButtonVue btn-type="tertiary">About</ButtonVue>
       </div>
       <div class="authButtons" v-if="!isAUserLogged">
         <RouterLink :to="{name: 'Login'}"><ButtonVue btn-type="primary">Login</ButtonVue></RouterLink>
@@ -58,7 +59,7 @@
     gap: 1rem;
   }
 
-  .authButtons > a{
+  .authButtons > a, .projectButtons > a{
     text-decoration: none;
   }
 </style>

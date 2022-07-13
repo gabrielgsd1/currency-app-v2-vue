@@ -7,6 +7,7 @@
   import DeletionPopUp from '@/components/PopUps/DeletionPopUp.vue';
   import { getLoginInfo, setConversions } from '@/store/loginInfo';
 
+
   const displayInfoPopUp:Ref = ref({
     display: false,
     data: null
