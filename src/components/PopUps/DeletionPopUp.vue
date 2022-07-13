@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import ButtonVue from '@/components/ButtonVue.vue';
+  import ButtonVue from '@/components/Utilities/ButtonVue.vue';
   import PopUpContent from './PopUpContent.vue';
   import Overlay from './Overlay.vue';
   import type { Conversion } from '@/store/selectedExchanges';

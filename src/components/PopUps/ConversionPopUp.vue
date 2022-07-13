@@ -11,6 +11,7 @@
   defineEmits<{
     (e: 'leavePopUp'):void
   }>()
+
   const fromData = getCurrency(conversion.from_code)
   const toData = getCurrency(conversion.to_code)
 

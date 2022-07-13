@@ -1,13 +1,17 @@
 <script setup lang="ts">
   import {defineProps} from 'vue'
 
-  defineProps(['name'])
+  defineProps(['name', 'value'])
+  defineEmits(['update:value'])
 </script>
 
 <template>
   <div>
     <label><slot></slot></label>
-      <input :type="name" class="input" />
+      <input 
+        :type="name" 
+        :value="value"
+        @input="$emit('update:value', ($event?.target as HTMLInputElement).value )" class="input" />
   </div>
 </template>
 

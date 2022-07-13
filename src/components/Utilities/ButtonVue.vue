@@ -22,7 +22,7 @@
     all: unset;
     border-radius: .50em;
     font-family: 'Poppins', sans-serif;
-    transition: 250ms;
+    transition: 175ms;
     padding: .25em .50em;
     cursor: pointer;
   }

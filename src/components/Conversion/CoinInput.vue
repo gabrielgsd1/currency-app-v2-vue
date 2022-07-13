@@ -1,6 +1,6 @@
 <script setup lang="ts">
-  import {db} from "../store/allExchanges"
-  import { clearFromExchange, clearToExchange, selectedOptions, setFromCoin, setToCoin } from '../store/selects';
+  import {db} from "@/store/allExchanges"
+  import { clearFromExchange, clearToExchange, selectedOptions, setFromCoin, setToCoin } from '@/store/selects';
   import {conversionState} from '@/store/selectedExchanges'
   import {ref, computed, defineProps, watch} from 'vue'
   import type { Ref } from 'vue';
@@ -11,6 +11,13 @@
   function clearInput(){
     text.value = ''
   }
+
+  watch(() => conversionState.value.status, (val) => {
+    if(val === 'completed') {
+      clearInput()
+      hasCoinBeenChosen.value = false
+    }
+  })
   
   const props = defineProps<CoinInputSelection>()
 
@@ -18,10 +25,6 @@
   const input:Ref<HTMLInputElement | null> = ref(null)
   const hasCoinBeenChosen:Ref<boolean> = ref(false)
   const suggestionsRef:Ref<HTMLInputElement | null> = ref(null)
-
-  watch(() => conversionState.value.status ,(val) => {
-    if(val === 'completed') hasCoinBeenChosen.value = false
-  })
 
   const suggestions = computed(() => {
     return [...db.value].filter(item => {
@@ -38,9 +41,7 @@
     else id = selectedOptions.value.to
 
     return [...db.value].find(item => item.id === id)?.code
-
   })
-
 
   function handleItemClick(e:Event){
     const dataset = (e.target as HTMLInputElement).dataset
@@ -79,7 +80,6 @@
         v-for="item in suggestions"
         :key="item.id"
         :data-id="item.id"
-        @pointerdown.prevent=""
         @click="(e) => handleItemClick(e)"
       >
         {{item.code}} - {{item.currency}}
@@ -123,6 +123,9 @@
     overflow: auto;
   }
   .input:focus + .suggestions{
+    display: block;
+  }
+  .suggestions:active {
     display: block;
   }
 

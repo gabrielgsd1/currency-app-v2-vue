@@ -1,31 +1,71 @@
 <script setup lang="ts">
-import InputsVue from "@/components/Forms/InputsVue.vue";
-import InputVue from "@/components/Forms/InputVue.vue";
-import InputRadioVue from '@/components/Forms/InputRadioVue.vue'
-import {inputState} from '@/store/inputs'
-import { defineProps } from "vue";
-import ButtonVue from "../ButtonVue.vue";
-import { computed } from "@vue/reactivity";
+  import InputVue from "@/components/Forms/InputVue.vue";
+  import { ref, type Ref } from "vue";
+  import ButtonVue from "../Utilities/ButtonVue.vue";
+  import { computed } from "@vue/reactivity";
+  import axios from "axios";
+  import { useRouter } from "vue-router";
+  import { setLoginInfo, type UserData } from "@/store/loginInfo";
 
-type FormProps = {
-  type: string
-}
+  const router = useRouter()
 
-const props = defineProps<FormProps>()
+  const formType = computed(() => {
+    return router.currentRoute.value.name?.toString().toLowerCase()
+  })
 
-const formSubmitText = computed(() => {
-  return props.type === 'register' ? 'Register' : 'Login' 
-})
+  const formSubmitText = computed(() => {
+    return formType.value === 'register' ? 'Register' : 'Login' 
+  })
+
+  const inputData:Ref = ref({
+    name: '',
+    email: '',
+    password: ''
+  })
+
+  const url = computed(() => {
+    if(formType.value === 'register') return 'http://localhost:3001/registerUser'
+    else return 'http://localhost:3001/login'
+  })
+
+  async function handleSubmit(){
+    const req = await axios.post(url.value, {
+      name: inputData.value.name,
+      email: inputData.value.email,
+      password: inputData.value.password,
+    })
+    const data:UserData = req.data
+    if(data.error == null){
+      setLoginInfo({isLogged: true, userData: data})
+      router.push({name: formType.value === 'login' ? 'Conversion' : 'Login'})
+    }
+    
+  }
 </script>
 
 <template>
-    <div class="inputContainer">
-      
-      <InputVue name="text" v-if="type === 'register'">Name</InputVue>
-      <InputVue name='text'>Email</InputVue>
-      <InputVue name='password'>Password</InputVue>
+    <form class="inputContainer" @submit.prevent="handleSubmit">
+      <InputVue 
+        name="text" 
+        v-model:value="inputData.name" 
+        v-if="formType === 'register'"
+      >
+        Name
+      </InputVue>
+      <InputVue 
+        name='text' 
+        v-model:value="inputData.email"
+      >
+        Email
+      </InputVue>
+      <InputVue 
+        name='password' 
+        v-model:value="inputData.password"
+      >
+        Password
+      </InputVue>
       <ButtonVue btn-type="primary">{{formSubmitText}}</ButtonVue>
-    </div>
+    </form>
 </template>
 
 <style>

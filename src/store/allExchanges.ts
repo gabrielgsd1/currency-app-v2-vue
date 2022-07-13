@@ -21,14 +21,6 @@ export function handleDate(stringDate:string){
 
 export let db:Ref<Array<Exchange>> = ref([])
 
-export async function getAllMadeConversions(id: string)
-:Promise<Array<Conversion>>{
-  const {data} = await axios.post('http://localhost:3001/getconversions', {
-    id
-  })
-  return data
-}
-
 export async function getAllCurrencies()
 :Promise<Exchange[]>{
   const {data} = await axios.get('http://localhost:3001/getcurrencies')

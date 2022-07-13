@@ -1,13 +1,11 @@
 <script setup lang="ts">
-  import { getAllConversions} from '../store/selectedExchanges';
   import type {Conversion} from '@/store/selectedExchanges' 
-  import {db, deleteConversion, handleDate} from '@/store/allExchanges'
-  import ButtonVue from './ButtonVue.vue';
+  import { deleteConversion, handleDate} from '@/store/allExchanges'
   import ConversionPopUp from "@/components/PopUps/ConversionPopUp.vue"
   import { ref, type Ref, computed } from 'vue';
-  import ShowUpTransition from './Transitions/ShowUpTransition.vue';
-  import DeletionPopUp from './PopUps/DeletionPopUp.vue';
-  import {refreshConversions} from '@/store/selectedExchanges'
+  import ShowUpTransition from '@/components/Transitions/ShowUpTransition.vue';
+  import DeletionPopUp from '@/components/PopUps/DeletionPopUp.vue';
+  import { getLoginInfo, setConversions } from '@/store/loginInfo';
 
   const displayInfoPopUp:Ref = ref({
     display: false,
@@ -20,7 +18,7 @@
   })
 
   const conversionsCount = computed(() => {
-    return getAllConversions().length
+    return getLoginInfo().userData?.madeConversions.length
   })
 
   function handleDeleteButtonClick(conversion:Conversion){
@@ -36,7 +34,7 @@
   async function deleteItem(conversion: Conversion){
     const remainingConversions:Conversion[] = await deleteConversion(conversion.id as string)
     showDeletePopUp(false)
-    refreshConversions(remainingConversions)
+    setConversions(remainingConversions)
   }
 
   function handleConversionClick(conversion:Conversion){
@@ -44,7 +42,7 @@
     displayInfoPopUp.value.data = conversion
   }
 
-  function leavePopUp(){
+  function leaveInfoPopUp(){
     displayInfoPopUp.value.display = false
     displayInfoPopUp.value.data = null
   }
@@ -57,17 +55,17 @@
 
 <template>
   <div id="resultContainer">
-    <h2>Made Conversions <span v-if="conversionsCount > 0"> - {{conversionsCount}}</span></h2>
-    <h3 v-if="conversionsCount < 1">Nothing here yet.</h3>
+    <h2>Made Conversions <span v-if="conversionsCount != null && conversionsCount < 1"> - {{conversionsCount}}</span></h2>
+    <h3 v-if="conversionsCount != null && conversionsCount >= 1">Nothing here yet.</h3>
     <TransitionGroup 
       tag="div" 
       class="conversionsContainer" 
-      v-if="getAllConversions().length > 0" 
+      v-if="conversionsCount != null && conversionsCount > 0 " 
       name="move show"
       type="animation"
     >
       <div 
-        v-for="item in getAllConversions()" 
+        v-for="item in getLoginInfo().userData?.madeConversions" 
         :key="item.id" 
         class="conversionItem" 
         @click="() => handleConversionClick(item)"
@@ -86,7 +84,7 @@
       <ConversionPopUp
         v-if="displayInfoPopUp.display"
         :conversion="displayInfoPopUp.data"
-        @leavePopUp="leavePopUp"
+        @leavePopUp="leaveInfoPopUp"
       />
     </ShowUpTransition>
     <ShowUpTransition>

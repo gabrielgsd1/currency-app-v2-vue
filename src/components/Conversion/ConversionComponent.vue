@@ -1,8 +1,13 @@
 <script setup lang='ts'>
-import ConversionButtonVue from '@/components/ConversionButtonVue.vue'
-import ResultTable from '@/components/ResultTable.vue'
-import CoinInput from '@/components/CoinInput.vue'
-import { conversionState } from '@/store/selectedExchanges';
+import ConversionButtonVue from '@/components/Conversion/ConversionButtonVue.vue'
+import ResultTable from '@/components/Conversion/ResultTable.vue'
+import CoinInput from '@/components/Conversion/CoinInput.vue'
+import { getAllCurrencies } from '@/store/allExchanges';
+import { onMounted } from 'vue';
+
+onMounted(async () => {
+  await getAllCurrencies()
+})
 
 </script>
 
@@ -18,12 +23,15 @@ import { conversionState } from '@/store/selectedExchanges';
   </div>
 </template>
 
-<style>
+<style scoped>
   #conversionContainer{
     margin: 1rem;
     display: flex;
     flex-direction: column;
     gap: 2em;
     align-items: center;
+  }
+  #inputs{
+    display: flex;
   }
 </style>

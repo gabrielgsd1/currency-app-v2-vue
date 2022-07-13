@@ -1,15 +1,15 @@
 <script setup lang="ts">
-  import { ref, type Ref } from 'vue';
+  import { computed } from 'vue';
   import { RouterLink, useRouter } from 'vue-router';
-  import ButtonVue from './ButtonVue.vue';
-  import {getUserData} from '@/store/loginInfo'
+  import ButtonVue from '@/components/Utilities/ButtonVue.vue';
+  import {getLoginInfo, setLoginInfo} from '@/store/loginInfo'
 
   const router = useRouter()
 
-  const userInfo:Ref = ref(getUserData())
+  const isAUserLogged = computed(() => getLoginInfo().isLogged)
 
   function handleSignOut(){
-    //todo: sign user out
+    setLoginInfo({isLogged: false, userData: undefined})
     router.push('/login')
   }
 
@@ -18,13 +18,13 @@
 <template>
   <header>
     <div class="container">
-      <div>
+      <div class="projectButtons">
         <ButtonVue btn-type="tertiary">About</ButtonVue>
+        <ButtonVue btn-type="primary"><a id="github" href="https://github.com/gabrielgsd1" target="_blank">GitHub</a></ButtonVue>
       </div>
-      <div class="authButtons" v-if="!userInfo.isLogged">
-        <RouterLink :to="{name: 'Login', params: { type: 'login'}}"><ButtonVue btn-type="primary">Login</ButtonVue></RouterLink>
-        <RouterLink :to="{name: 'Register', params: { type: 'register'}}"><ButtonVue btn-type="primary">Register</ButtonVue></RouterLink> 
-        <RouterLink :to="{name: 'Conversion'}"><ButtonVue btn-type="primary">Conversion (prov.)</ButtonVue></RouterLink> 
+      <div class="authButtons" v-if="!isAUserLogged">
+        <RouterLink :to="{name: 'Login'}"><ButtonVue btn-type="primary">Login</ButtonVue></RouterLink>
+        <RouterLink :to="{name: 'Register'}"><ButtonVue btn-type="primary">Register</ButtonVue></RouterLink> 
       </div>
       <div class="authButtons" v-else>
         <ButtonVue btn-type="primary" @click="handleSignOut">Sign out</ButtonVue>
@@ -41,6 +41,9 @@
     /* position: sticky; */
     /* top: 0; */
   }
+  #github{
+    all: unset;
+  }
   .container{
     display: flex;
     box-sizing: border-box;
@@ -50,7 +53,7 @@
     justify-content: space-between;
     align-items: center;
   }
-  .authButtons{
+  .authButtons, .projectButtons{
     display: flex;
     gap: 1rem;
   }

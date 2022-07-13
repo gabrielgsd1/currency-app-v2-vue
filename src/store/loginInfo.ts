@@ -1,25 +1,32 @@
 import {ref, type Ref} from 'vue'
 import type { Conversion } from './selectedExchanges'
 
-type UserInfo = {
+export type LoginInfo = {
   isLogged: boolean,
-  userData?: {
+  userData?: UserData
+}
+
+export type UserData = {
     id: string,
     name: string,
     email: string,
-    madeConversions: Conversion[]
-  }
+    madeConversions: Conversion[],
+    error?: boolean
 }
 
-const userInfo:Ref<UserInfo> = ref({
+const loginInfo:Ref<LoginInfo> = ref({
   isLogged: false
 })
 
-export function setUserData(info:UserInfo){
-  userInfo.value = info
+export function setLoginInfo(info:LoginInfo){
+  loginInfo.value = info
 }
 
-export function getUserData():UserInfo{
-  return userInfo.value
+export function getLoginInfo():LoginInfo{
+  return loginInfo.value
+}
+
+export function setConversions(conversions:Conversion[]){
+  if(loginInfo.value.userData != undefined) loginInfo.value.userData.madeConversions = conversions
 }
 

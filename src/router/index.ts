@@ -1,36 +1,32 @@
 import {createRouter, createWebHistory} from 'vue-router'
-import HomeView from '@/views/HomeView.vue'
-import ConversionComponent from '@/components/ConversionComponent.vue'
-import FormContainerVue from '@/components/Forms/FormContainerVue.vue'
 
 const routes = [
   {
     path: '/',
     name: 'Home Page',
-    component: FormContainerVue,
-    props: true
+    component: () => import('@/components/HomePage/HomePage.vue'),
   },
   {
     path: '/login',
     name: 'Login',
-    component: FormContainerVue,
-    props: true
+    component: () => import('@/components/Forms/FormContainerVue.vue'),
+    props: () => ({ type: 'login' })
   },
   {
     path: '/register',
     name: 'Register',
-    component: FormContainerVue,
-    props: true
+    component: () => import('@/components/Forms/FormContainerVue.vue'),
+    props: () => ({ type: 'register' })
   },
   {
     path: '/conversion',
     name: 'Conversion',
-    component: ConversionComponent
+    component: () => import('@/components/Conversion/ConversionComponent.vue')
   },
   {
     path: '/about',
     name: 'About',
-    component: HomeView
+    component: () => import('@/components/Forms/FormContainerVue.vue')
   },
 ]
 

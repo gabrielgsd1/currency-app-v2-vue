@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import ButtonVue from "./ButtonVue.vue";
-import { addConversionToList, conversionState } from "@/store/selectedExchanges";
+import ButtonVue from "@/components/Utilities/ButtonVue.vue";
+import { conversionState } from "@/store/selectedExchanges";
 import { clearFromExchange, clearToExchange, selectedOptions } from "@/store/selects";
 import {db, type Exchange} from "@/store/allExchanges"
-import type { Conversion } from '@/store/selectedExchanges'
+import {getLoginInfo, setConversions} from '@/store/loginInfo'
 import axios, { type AxiosResponse } from "axios";
 
 async function handleConversion(from:Exchange, to:Exchange){
@@ -12,12 +12,12 @@ async function handleConversion(from:Exchange, to:Exchange){
     const request:AxiosResponse = await axios.post("http://localhost:3001/convert", {
       from: from.code,
       to: to.code,
-      id: '62bf74a6c8fdd0331d8e4ca7'
+      id: getLoginInfo().userData?.id
     })
     conversionState.value.status = 'completed'
     
-    const data:Conversion = request.data
-    addConversionToList(data)
+    const data = request.data
+    setConversions(data.all)
     clearFromExchange()
     clearToExchange()
     return data
