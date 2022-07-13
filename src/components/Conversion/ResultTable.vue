@@ -55,8 +55,8 @@
 
 <template>
   <div id="resultContainer">
-    <h2>Made Conversions <span v-if="conversionsCount != null && conversionsCount < 1"> - {{conversionsCount}}</span></h2>
-    <h3 v-if="conversionsCount != null && conversionsCount >= 1">Nothing here yet.</h3>
+    <h2>Made Conversions <span v-if="conversionsCount != null && conversionsCount >= 1"> - {{conversionsCount}}</span></h2>
+    <h3 v-if="conversionsCount != null && conversionsCount < 1">Nothing here yet.</h3>
     <TransitionGroup 
       tag="div" 
       class="conversionsContainer" 
