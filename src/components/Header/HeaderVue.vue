@@ -19,7 +19,7 @@
   <header>
     <div class="container">
       <div class="projectButtons">
-        ><RouterLink to="/"><ButtonVue btn-type="primary">Home</ButtonVue></RouterLink>
+        <RouterLink to="/"><ButtonVue btn-type="primary">Home</ButtonVue></RouterLink>
         <ButtonVue btn-type="primary"><a id="github" href="https://github.com/gabrielgsd1" target="_blank">GitHub</a></ButtonVue>
         <RouterLink :to="{name: 'About'}"><ButtonVue btn-type="tertiary">About</ButtonVue></RouterLink>
       </div>
